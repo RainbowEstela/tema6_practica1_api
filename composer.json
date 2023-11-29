@@ -1,0 +1,6 @@
+{
+    "require": {
+        "mongodb/mongodb": "^1.15.0",
+        "guzzlehttp/guzzle": "^6.5.0"
+    }
+}
