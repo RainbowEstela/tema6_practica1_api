@@ -10,7 +10,7 @@
 <body>
     <header class="bg-dark navbar shadow sticky-top">
     <div>
-        <a class=" navbar-brand px-3 text-light" href="index.php">Navidad</a>
+        <a class=" navbar-brand px-3 text-light" href="index.php">Triple Triad Checker</a>
     </div>
 
     <form class="form-inline invisible">

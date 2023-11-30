@@ -60,12 +60,20 @@ use TripleTriad\vistas\VistaAPICard;
             //array con los filtros
             $filtrosArray = [];
 
+            
+
             //filtros
             $idInicio="";
             $idFin="";
+            $name="";
+            $patch="";
+            $stars="";
+
+            //opcion de paginacion
+            $activarPaginacion = true;
 
 
-            //de momento solo vamos a filtar por ids al crear la consulta
+            //comprobar ids
             if(isset($_REQUEST["idStart"]) && isset($_REQUEST["idFin"])) {
 
                 $idInicio = $_REQUEST["idStart"];
@@ -73,6 +81,32 @@ use TripleTriad\vistas\VistaAPICard;
 
                 array_push($filtrosArray,"id_in=".$idInicio."..".$idFin);
             }
+
+
+            //comprobar nombre
+            if(isset($_REQUEST["name"])) {
+                $name=$_REQUEST["name"];
+                $activarPaginacion = false;
+
+                array_push($filtrosArray,"name_en_cont=".$name);
+            }
+
+            //comprobar parche
+            if(isset($_REQUEST["patch"])) {
+                $patch = $_REQUEST["patch"];
+                $activarPaginacion = false;
+
+                array_push($filtrosArray,"patch_cont=".$patch);
+            }
+
+            //comprobar estrellas
+            if(isset($_REQUEST["stars"])) {
+                $stars = $_REQUEST["stars"];
+                $activarPaginacion = false;
+
+                array_push($filtrosArray,"stars_eq=".$stars);
+            }
+
 
 
             //creamos una cadena con todos los filtros pegados por &
@@ -83,7 +117,7 @@ use TripleTriad\vistas\VistaAPICard;
             
             $resObj = json_decode($request->getBody());
 
-            VistaAPICard::render($resObj,$idInicio,$idFin);
+            VistaAPICard::render($resObj,$idInicio,$idFin,$activarPaginacion);
 
         }
         
