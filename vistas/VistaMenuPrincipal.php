@@ -11,57 +11,15 @@
           echo' <main class="container ">';
           echo '
           <div class="d-flex justify-content-center p-4">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Añadir</button>  
-          </div>
-          <div class="d-flex justify-content-end">
-            <form class="form-inline" style="width:200px;">
-              <div class="d-flex nowrap">
-                <input class="form-control" type="number" placeholder="Buscar año" aria-label="Search" name="year" min=0 required>
-                <button class="btn btn btn-success" type="submit" name="accion" value="regalosPorYear">Buscar</button>
-              </div>
-            </form> 
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Filtrar</button>  
           </div>
           ';
         ?>
 
-        <div class="cotainer-fluid">
-            <div class="row" id="contenedorTarjetas">
-                <div class="col">
-                    <div class="card" style="width: 18rem;">
-                        <img src="..." class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card" style="width: 18rem;">
-                        <img src="..." class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card" style="width: 18rem;">
-                        <img src="..." class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            
-
+        <div class="cotainer-fluid" id="contenedorTarjetas">
+          <div class="d-flex flex-row flex-wrap justify-content-center">
+                <h3>Cargando cartas...</h3>
+          </div>
         </div>
 
 
@@ -131,13 +89,46 @@
         window.onload = llamarInicio();
 
         async function llamarInicio() {
-            const response = await fetch("./index.php?accion=llamarAPI");
+            const response = await fetch("./index.php?accion=llamarAPI&idStart=1&idFin=20");
             const data = await response.text();
 
             console.log(data);
 
             document.getElementById("contenedorTarjetas").innerHTML = data;
         }
+
+
+
+      //Botones prev y next de paginación
+      document.getElementById("contenedorTarjetas").onclick=  async function(e) {
+        
+        let botonPrev = e.target.closest("li[id=prev]");
+		    if (botonPrev) {
+          console.log(botonPrev.getAttribute('inicio'));
+          let inicio = botonPrev.getAttribute('inicio');
+          let fin = botonPrev.getAttribute('fin');
+          
+          if (inicio < 1) {
+            inicio = 1;
+            fin = 20;
+          }
+            
+
+          const response = await fetch("./index.php?accion=llamarAPI&idStart="+inicio+"&idFin="+fin);
+          const data = await response.text();
+          document.getElementById("contenedorTarjetas").innerHTML = data;
+        }
+
+        let botonNext = e.target.closest("li[id=next]");
+		    if (botonNext) {
+          let inicio = botonNext.getAttribute('inicio');
+          let fin = botonNext.getAttribute('fin');
+ 
+          const response = await fetch("./index.php?accion=llamarAPI&idStart="+inicio+"&idFin="+fin);
+          const data = await response.text();
+          document.getElementById("contenedorTarjetas").innerHTML = data;
+        }
+      };
 </script>
 
 <?php

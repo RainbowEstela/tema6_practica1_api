@@ -7,6 +7,7 @@
     use TripleTriad\controladores\ControladorTripleTriad;
     use GuzzleHttp\Client;
     use GuzzleHttp\Psr7\Request;
+use TripleTriad\vistas\VistaAPICard;
 
     //Autocargar las clases --------------------------
     spl_autoload_register(function ($class) {
@@ -56,11 +57,33 @@
         }
 
         if(strcmp($_REQUEST["accion"],"llamarAPI") == 0) {
+            //array con los filtros
+            $filtrosArray = [];
+
+            //filtros
+            $idInicio="";
+            $idFin="";
+
+
+            //de momento solo vamos a filtar por ids al crear la consulta
+            if(isset($_REQUEST["idStart"]) && isset($_REQUEST["idFin"])) {
+
+                $idInicio = $_REQUEST["idStart"];
+                $idFin = $_REQUEST["idFin"];
+
+                array_push($filtrosArray,"id_in=".$idInicio."..".$idFin);
+            }
+
+
+            //creamos una cadena con todos los filtros pegados por &
+            $filtrosString = implode("&",$filtrosArray);
 
             $client = new Client();
-            $request = new Request('GET', 'https://triad.raelys.com/api/cards/240');
-            $res = $client->sendAsync($request)->wait();
-            echo $res->getBody();
+            $request = $client->request('GET', 'https://triad.raelys.com/api/cards?'.$filtrosString);
+            
+            $resObj = json_decode($request->getBody());
+
+            VistaAPICard::render($resObj,$idInicio,$idFin);
 
         }
         
