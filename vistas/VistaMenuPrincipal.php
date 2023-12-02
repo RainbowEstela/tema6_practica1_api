@@ -109,7 +109,7 @@ class VistaMenuPrincipal
         });
 
         document.getElementById("contenedorTarjetas").innerHTML = await response.text();
-      } 
+      }
       //fin boton filtrar
 
 
@@ -148,13 +148,37 @@ class VistaMenuPrincipal
         //fin boton next
 
         //boton detalle
-        let botonDetalle = e.target.closest("a[tipo=card]");
-        if(botonDetalle) {
-          console.log(botonDetalle.getAttribute("idCarta"));
-        }
+        let botonDetalle = e.target.closest("a[tipo=carta]");
+        if (botonDetalle) {
 
+          let idCarta = botonDetalle.getAttribute('idcarta');
+
+          const response = await fetch("./index.php?accion=detalleCarta&id=" + idCarta);
+          const data = await response.text();
+          document.getElementById("contenedorTarjetas").innerHTML = data;
+        }
         //fin boton detalle
 
+
+        //boton publicar comentario
+        let botonNuevoComentario = e.target.closest("button[tipo=nuevoComentario]");
+        if (botonNuevoComentario) {
+          let myModal = document.getElementById("comentarios");
+          let modal = bootstrap.Modal.getInstance(myModal);
+          modal.hide();
+
+          const datos = new FormData(document.getElementById("addComentarioForm"));
+          datos.append("accion", "addComentario");
+
+          const response = await fetch("./index.php", { //Fetch hace la petición
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            body: datos
+          });
+
+          document.getElementById("contenedorTarjetas").innerHTML = await response.text();
+        }
+
+        //fin boton publicar comentario
       };
     </script>
 
